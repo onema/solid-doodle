@@ -1,11 +1,13 @@
+# TO USE:
+# serverless deploy --stage USER_NAME -v
 # Cloud Platform infrastructure definition for the serverless framework
 service: log-parser
 provider:
   name: aws
   runtime: dotnetcore1.0
   profile: default
-  timeout: 300
   region: us-west-2
+  timeout: 300
   versionFunctions: false
 
 # you can add statements to the Lambda function's IAM Role here
