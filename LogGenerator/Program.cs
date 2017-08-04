@@ -7,7 +7,11 @@ using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 
 namespace LogGenerator {
+
+    //--- Class ---
     class Program {
+    
+        //--- Methods ---
         static void Main(string[] args) {
             var region = RegionEndpoint.GetBySystemName("us-west-2");
             var chain = new CredentialProfileStoreChain();
