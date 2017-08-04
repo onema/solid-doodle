@@ -10,10 +10,10 @@ Parameters:
     LogStreamName:
       Description: The name of the log stream
       Type: String
-      Default: test
+      Default: test-log-stream
 
 Resources:
-  # IAM POLICY FOR ACCESSING 
+  # CLOUDWATCH LOG GROUP 
   CloudWatchLogGroup:
     Type: "AWS::Logs::LogGroup"
     Properties: 
@@ -21,10 +21,28 @@ Resources:
         Ref: LogGroupName
       RetentionInDays: 1
     
+  # CLOUDWATCH LOG STREAM
   CloudWatchLogStream:
     Type: "AWS::Logs::LogStream"
     Properties: 
       LogGroupName: 
-        Ref: LogGroupName
+        Ref: CloudWatchLogGroup
       LogStreamName: 
         Ref: LogStreamName
+  
+  LambdaSharpLogParserRole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement: 
+          -
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      RoleName: LambdaSharpLogParserRole

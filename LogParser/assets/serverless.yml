@@ -1,10 +1,10 @@
 # TO USE:
 # serverless deploy -v --stage ENVIRONMENT_NAME --region us-west-2
-service: log-parser
+service: lambdasharp-log-parser
 provider:
   name: aws
   runtime: dotnetcore1.0
-  profile: default
+  profile: lambdasharp
   region: ${opt:region}
   timeout: 300
   stage: dev
@@ -23,23 +23,20 @@ provider:
             
 custom:
   environmentName: ${opt:stage}
-  logGroupName: /lambda-sharp/log-parser/${opt:stage}
-  logStreamName: test
+  logGroupName: /lambda-sharp/log-parser/dev
+  logStreamName: test-log-stream
 
 # you can add packaging information here
 package:
-  artifact: bin/Debug/netcoreapp1.0.zip
+  artifact: ../bin/release/netcoreapp1.0/deploy-package.zip
 
 functions:
   LogParser:
     # Assembly::Namespace.Class::FunctionName
     handler: LogParser::LogParser.Function::Handler
     name: ${opt:stage}-log-parser
-    environment:
-      LOG_GROUP: ${self:custom.logGroupName}
-      LOG_STREAM: ${self:custom.logStreamName}
     events:
-      - cloudwatchLog: ${opt:stage}/lambda/log-parser
+      - cloudwatchLog: ${self:custom.logGroupName}
 
 resources: 
   Parameters:
@@ -57,4 +54,6 @@ resources:
       Default: ${self:custom.logStreamName}
    
    # Get the resources from the cloud formation template
-  Resources: ${file(./resources_cfn.yml):Resources}
+  Resources: 
+    CloudWatchLogGroup: ${file(./resources-cfn.yml):Resources.CloudWatchLogGroup}
+    CloudWatchLogStream: ${file(./resources-cfn.yml):Resources.CloudWatchLogStream}
