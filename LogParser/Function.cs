@@ -6,10 +6,14 @@ namespace LogParser {
     
     //--- Classes ---
     public class CloudWatchLogsEvent {
+    
+        //--- Properties ---
         public Awslogs awslogs { get; set; }
     }
     
     public class Awslogs {
+        
+        //--- Properties ---
         public string data { get; set; }
     }
 
