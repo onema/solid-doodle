@@ -7,4 +7,8 @@
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.1.0" />
     <PackageReference Include="AWSSDK.CloudWatchLogs" Version="3.3.2.16" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="1.7.0" />
+  </ItemGroup>
 </Project>
