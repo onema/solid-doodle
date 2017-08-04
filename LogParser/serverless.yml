@@ -1,0 +1,34 @@
+# Cloud Platform infrastructure definition for the serverless framework
+service: log-parser
+provider:
+  name: aws
+  runtime: dotnetcore1.0
+  profile: default
+  timeout: 300
+  region: us-west-2
+  versionFunctions: false
+
+# you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:ListBucket'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - Ref: ServerlessDeploymentBucket
+
+# you can add packaging information here
+package:
+  artifact: bin/Debug/netcoreapp1.0.zip
+
+functions:
+
+  LogParser:
+    # Assembly::Namespace.Class::FunctionName
+    handler: LogParser::LogParser.Function::Handler
+    name: ${opt:stage}-log-parser
+    events:
+      - cloudwatchLog: ${opt:stage}/lambda/log-parser
+ 
