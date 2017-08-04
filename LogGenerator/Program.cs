@@ -7,10 +7,14 @@ using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 
 namespace LogGenerator {
-
+    
     //--- Class ---
     class Program {
     
+        //--- Constants ---
+        const string LOG_GROUP = "/lambda-sharp/log-parser/dev";
+        const string LOG_STREAM = "test-log-stream";
+        
         //--- Methods ---
         static void Main(string[] args) {
             var region = RegionEndpoint.GetBySystemName("us-west-2");
@@ -19,8 +23,8 @@ namespace LogGenerator {
             if (chain.TryGetAWSCredentials("default", out awsCredentials)) { 
                 var client = new AmazonCloudWatchLogsClient(awsCredentials, region);
                 var request = new PutLogEventsRequest {
-                      LogGroupName = "/lambda-sharp/log-parser/juant",
-                      LogStreamName = "test",
+                      LogGroupName = LOG_GROUP,
+                      LogStreamName = LOG_STREAM,
                       LogEvents = new List<InputLogEvent> {
                           new InputLogEvent {
                               Message = "Test1\n", 
@@ -75,7 +79,7 @@ namespace LogGenerator {
                                Timestamp = DateTime.Now
                           }
                       },
-                      SequenceToken = "49574622130422221348734194464193416485261082947565394354"
+//                      SequenceToken = "49567750446880921213636912228400127364839351295405982594"
                 };
                 
                 var response = client.PutLogEventsAsync(request).Result;
