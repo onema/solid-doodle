@@ -1,0 +1,30 @@
+Parameters:
+    DeploymentStage:
+      Description: Deployment name (e.g. production, stage)
+      Type: String
+      Default: dev
+    LogGroupName:
+      Description: The name of the log group
+      Type: String
+      Default: '/lambda-sharp/log-parser/dev'
+    LogStreamName:
+      Description: The name of the log stream
+      Type: String
+      Default: test
+
+Resources:
+  # IAM POLICY FOR ACCESSING 
+  CloudWatchLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties: 
+      LogGroupName: 
+        Ref: LogGroupName
+      RetentionInDays: 1
+    
+  CloudWatchLogStream:
+    Type: "AWS::Logs::LogStream"
+    Properties: 
+      LogGroupName: 
+        Ref: LogGroupName
+      LogStreamName: 
+        Ref: LogStreamName

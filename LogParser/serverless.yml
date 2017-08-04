@@ -1,13 +1,13 @@
 # TO USE:
-# serverless deploy --stage USER_NAME -v
-# Cloud Platform infrastructure definition for the serverless framework
+# serverless deploy -v --stage ENVIRONMENT_NAME --region us-west-2
 service: log-parser
 provider:
   name: aws
   runtime: dotnetcore1.0
   profile: default
-  region: us-west-2
+  region: ${opt:region}
   timeout: 300
+  stage: dev
   versionFunctions: false
 
 # you can add statements to the Lambda function's IAM Role here
@@ -20,17 +20,41 @@ provider:
           - ''
           - - 'arn:aws:s3:::'
             - Ref: ServerlessDeploymentBucket
+            
+custom:
+  environmentName: ${opt:stage}
+  logGroupName: /lambda-sharp/log-parser/${opt:stage}
+  logStreamName: test
 
 # you can add packaging information here
 package:
   artifact: bin/Debug/netcoreapp1.0.zip
 
 functions:
-
   LogParser:
     # Assembly::Namespace.Class::FunctionName
     handler: LogParser::LogParser.Function::Handler
     name: ${opt:stage}-log-parser
+    environment:
+      LOG_GROUP: ${self:custom.logGroupName}
+      LOG_STREAM: ${self:custom.logStreamName}
     events:
       - cloudwatchLog: ${opt:stage}/lambda/log-parser
- 
+
+resources: 
+  Parameters:
+    DeploymentStage:
+      Description: Deployment name (e.g. production, stage)
+      Type: String
+      Default: ${self:custom.environmentName}
+    LogGroupName:
+      Description: The name of the log group
+      Type: String
+      Default: ${self:custom.logGroupName}
+    LogStreamName:
+      Description: The name of the log stream
+      Type: String
+      Default: ${self:custom.logStreamName}
+   
+   # Get the resources from the cloud formation template
+  Resources: ${file(./resources_cfn.yml):Resources}
