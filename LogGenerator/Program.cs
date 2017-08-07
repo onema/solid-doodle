@@ -6,6 +6,7 @@ using Amazon.CloudWatchLogs.Model;
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Tweetinvi;
+using System.Linq;
 
 namespace LogGenerator {
 
@@ -26,8 +27,9 @@ namespace LogGenerator {
                 throw new Exception("AWS Credentials not found!");
             }
             var client = new AmazonCloudWatchLogsClient(awsCredentials, region);
+            var sequenceToken = GetNextSequenceToken(client);
             SetTwitterCredentials();
-            StartStreaming(client, null);
+            StartStreaming(client, sequenceToken);
         }
 
         private static void StartStreaming(IAmazonCloudWatchLogs client, string sequenceToken) {
@@ -42,8 +44,7 @@ namespace LogGenerator {
                     Message = eventArgs.Tweet.ToJson(),
                     Timestamp = DateTime.Now
                 });
-                counter++;
-                if(counter >= 10) {
+                if(++counter % 10 == 0) {
                     sequenceToken = DispatchLogEvents(client, logEventsBatch, sequenceToken);
                     logEventsBatch = new List<InputLogEvent>();
                 }
@@ -59,6 +60,13 @@ namespace LogGenerator {
             var accessToken = "";
             var accessSecret = "";
             Auth.SetUserCredentials(consumerKey, consumerSecret, accessToken, accessSecret);
+        }
+        
+        private static string GetNextSequenceToken(IAmazonCloudWatchLogs client) {
+            var response = client.DescribeLogStreamsAsync(new DescribeLogStreamsRequest {
+                LogGroupName = LOG_GROUP
+            }).Result;
+            return response.LogStreams.First(x => x.LogStreamName == LOG_STREAM).UploadSequenceToken;
         }
 
         public static string DispatchLogEvents(IAmazonCloudWatchLogs client, List<InputLogEvent> logEvents, string sequenceToken) {
