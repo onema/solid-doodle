@@ -9,6 +9,8 @@ provider:
   timeout: 300
   stage: dev
   versionFunctions: false
+  environment:
+    LOGS_BUCKET: ${self:custom.environmentName}-lambda-sharp-s3-logs
 
 # you can add statements to the Lambda function's IAM Role here
   iamRoleStatements:
@@ -16,11 +18,16 @@ provider:
       Action:
         - 's3:ListBucket'
       Resource:
-        Fn::Join:
-          - ''
-          - - 'arn:aws:s3:::'
-            - Ref: ServerlessDeploymentBucket
-            
+        - Fn::Join: ['', ['arn:aws:s3:::', Ref: ServerlessDeploymentBucket]]
+    - Effect: 'Allow'
+      Action:
+        - 's3:ListBucket'
+        - 's3:PutObject' 
+        - 's3:GetObject' 
+        - 's3:DeleteObject'  
+      Resource:
+        - Fn::Join: ['', ['arn:aws:s3:::', Ref: S3Logs]]
+        - Fn::Join: ['', ['arn:aws:s3:::', Ref: S3Logs, '/*']]
 custom:
   environmentName: ${opt:stage}
   logGroupName: /lambda-sharp/log-parser/dev
@@ -57,3 +64,5 @@ resources:
   Resources: 
     CloudWatchLogGroup: ${file(./resources-cfn.yml):Resources.CloudWatchLogGroup}
     CloudWatchLogStream: ${file(./resources-cfn.yml):Resources.CloudWatchLogStream}
+    S3Logs: ${file(./resources-cfn.yml):Resources.S3Logs}
+    
