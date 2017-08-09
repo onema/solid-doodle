@@ -23,7 +23,7 @@ namespace LogGenerator {
             var region = RegionEndpoint.GetBySystemName(AWS_REGION);
             var chain = new CredentialProfileStoreChain();
             AWSCredentials awsCredentials;
-            if(!chain.TryGetAWSCredentials("default", out awsCredentials)) {
+            if(!chain.TryGetAWSCredentials("lambdasharp", out awsCredentials)) {
                 throw new Exception("AWS Credentials not found!");
             }
             var client = new AmazonCloudWatchLogsClient(awsCredentials, region);
