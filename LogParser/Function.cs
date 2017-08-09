@@ -31,13 +31,17 @@ namespace LogParser {
         //--- Methods ---
         [LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
         public void Handler(CloudWatchLogsEvent cloudWatchLogsEvent, ILambdaContext context) {
-            // Level One
+            // Level 1: decode and decompress data
             Console.WriteLine($"THIS IS THE DATA: {cloudWatchLogsEvent.AwsLogs.Data}");
             var data = DecompressLogData(cloudWatchLogsEvent.AwsLogs.Data);
             Console.WriteLine($"THIS IS THE DECODED, UNCOMPRESSED DATA: {data}");
+            
+            // Level 2: Frame and filter events
             var events = JsonConvert.DeserializeObject<DecompressedEvents>(data).LogEvents;
             var filteredEvents = events.Where(x => filter.IsMatch(x.Message)).ToList();
             filteredEvents.ForEach(x => Console.WriteLine($"MESSAGE: {x.Message}"));
+            
+            // Level 3: Save data to S3
             _s3Client.PutObjectAsync(
                 new PutObjectRequest(){
                     BucketName = logsBucket,
@@ -45,6 +49,8 @@ namespace LogParser {
                     ContentBody = string.Join("\n", filteredEvents.Select(x => x.Message).ToArray())
                 }
             ).Wait();
+            
+            // Level 4: Create athena schema to query data
         }
         
         public static string DecompressLogData(string value) {
