@@ -29,6 +29,7 @@ Resources:
       LogStreamName: 
         Ref: LogStreamName
   
+  # LAMBDA EXECUTION ROLE
   LambdaSharpLogParserRole:
     Type: "AWS::IAM::Role"
     Properties: 
