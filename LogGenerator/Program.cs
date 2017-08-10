@@ -7,6 +7,8 @@ using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Tweetinvi;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LogGenerator {
 
@@ -40,8 +42,17 @@ namespace LogGenerator {
             // stream.AddLocation(new Coordinates(-74, 40), new Coordinates(-73, 41));
             stream.MatchingTweetReceived += (sender, eventArgs) => {
                 Console.WriteLine(eventArgs.Tweet);
+                
+                var tweetInfo = JsonConvert.DeserializeObject<JObject>(eventArgs.Tweet.ToJson());
+                var user = tweetInfo["user"];
+                var retweetedStatus = tweetInfo["retweeted_status"];
+                var hashTags = String.Join(", ", retweetedStatus.Select(x => $"${x["hashtags"].ToArray()}"));
+                var text = $"The user name is '{user["name"]}', they have {user["favourites_count"]} favorite tweets and have tweeted {user["statuses_count"]} times. They have {user["friends_count"]} friends and follow {user["followers_count"]} people!!\u03BB#"; 
+                text += $"This tweet has been retweeted {retweetedStatus["retweet_count"]} and have been favorited by {retweetedStatus["favorite_count"]}\u03BB#";
+                text += $"This twee has the follwoing hash tags: [{hashTags}]\u03BB#";
+                
                 logEventsBatch.Add(new InputLogEvent {
-                    Message = eventArgs.Tweet.ToJson(),
+                    Message = text,
                     Timestamp = DateTime.Now
                 });
                 if(++counter % 10 == 0) {
@@ -55,10 +66,10 @@ namespace LogGenerator {
         private static void SetTwitterCredentials() {
 
             // Set up twitter credentials (https://apps.twitter.com)
-            var consumerKey = "";
-            var consumerSecret = "";
-            var accessToken = "";
-            var accessSecret = "";
+            var consumerKey = "kOr9jFO0N0oFWEilI74ZTmaop";
+            var consumerSecret = "eI1Tjv0tgO9nkYxAJfMslVJRRwJqKsosFwEjEbewYOZDRZhGll";
+            var accessToken = "820470222-yHssA3Qt7qNDX5A47VrR0UQJXuWARlcTL6Gok9Ut";
+            var accessSecret = "DK1d9WzGKBEAqH0HzFTChDdgsxUpjMhcUzDA2nmy6j0xX";
             Auth.SetUserCredentials(consumerKey, consumerSecret, accessToken, accessSecret);
         }
         
