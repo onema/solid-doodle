@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Amazon;
 using Amazon.CloudWatchLogs;
 using Amazon.CloudWatchLogs.Model;
@@ -9,6 +10,8 @@ using Tweetinvi;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Stream = Tweetinvi.Stream;
+using TwitterCredentials = LogGenerator.Model.TwitterCredentials;
 
 namespace LogGenerator {
 
@@ -91,11 +94,8 @@ namespace LogGenerator {
         private static void SetTwitterCredentials() {
 
             // Set up twitter credentials (https://apps.twitter.com)
-            var consumerKey = "kOr9jFO0N0oFWEilI74ZTmaop";
-            var consumerSecret = "eI1Tjv0tgO9nkYxAJfMslVJRRwJqKsosFwEjEbewYOZDRZhGll";
-            var accessToken = "820470222-yHssA3Qt7qNDX5A47VrR0UQJXuWARlcTL6Gok9Ut";
-            var accessSecret = "DK1d9WzGKBEAqH0HzFTChDdgsxUpjMhcUzDA2nmy6j0xX";
-            Auth.SetUserCredentials(consumerKey, consumerSecret, accessToken, accessSecret);
+            var credentials = JsonConvert.DeserializeObject<TwitterCredentials>(File.ReadAllText("credentials.json"));    
+            Auth.SetUserCredentials(credentials.ConsumerKey, credentials.ConsumerSecret, credentials.AccessToken, credentials.AccessSecret);
         }
         
         private static string GetNextSequenceToken(IAmazonCloudWatchLogs client) {
