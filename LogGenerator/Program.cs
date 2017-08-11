@@ -12,7 +12,17 @@ using Newtonsoft.Json.Linq;
 
 namespace LogGenerator {
 
-    //--- Class ---
+    //--- Classes ---
+    public static class JsonExtensions {
+        public static bool IsNullOrEmpty(this JToken token) {
+            return (token == null) ||
+                   (token.Type == JTokenType.Array && !token.HasValues) ||
+                   (token.Type == JTokenType.Object && !token.HasValues) ||
+                   (token.Type == JTokenType.String && token.ToString() == String.Empty) ||
+                   (token.Type == JTokenType.Null);
+        }
+    }
+    
     class Program {
 
         //--- Constants ---
@@ -31,7 +41,11 @@ namespace LogGenerator {
             var client = new AmazonCloudWatchLogsClient(awsCredentials, region);
             var sequenceToken = GetNextSequenceToken(client);
             SetTwitterCredentials();
-            StartStreaming(client, sequenceToken);
+            try {
+                StartStreaming(client, sequenceToken);
+            } catch(Exception e) {
+                Console.WriteLine(e);
+            }
         }
 
         private static void StartStreaming(IAmazonCloudWatchLogs client, string sequenceToken) {
@@ -41,18 +55,10 @@ namespace LogGenerator {
             stream.AddTrack("cats");
             // stream.AddLocation(new Coordinates(-74, 40), new Coordinates(-73, 41));
             stream.MatchingTweetReceived += (sender, eventArgs) => {
-                Console.WriteLine(eventArgs.Tweet);
-                
-                var tweetInfo = JsonConvert.DeserializeObject<JObject>(eventArgs.Tweet.ToJson());
-                var user = tweetInfo["user"];
-                var retweetedStatus = tweetInfo["retweeted_status"];
-                var hashTags = String.Join(", ", retweetedStatus.Select(x => $"${x["hashtags"].ToArray()}"));
-                var text = $"The user name is '{user["name"]}', they have {user["favourites_count"]} favorite tweets and have tweeted {user["statuses_count"]} times. They have {user["friends_count"]} friends and follow {user["followers_count"]} people!!\u03BB#"; 
-                text += $"This tweet has been retweeted {retweetedStatus["retweet_count"]} and have been favorited by {retweetedStatus["favorite_count"]}\u03BB#";
-                text += $"This twee has the follwoing hash tags: [{hashTags}]\u03BB#";
-                
+                var json = eventArgs.Tweet.ToJson();
+                var tweetInfo = JsonConvert.DeserializeObject<JObject>(json);
                 logEventsBatch.Add(new InputLogEvent {
-                    Message = text,
+                    Message = GetLogText(tweetInfo),
                     Timestamp = DateTime.Now
                 });
                 if(++counter % 10 == 0) {
@@ -61,6 +67,25 @@ namespace LogGenerator {
                 }
             };
             stream.StartStreamMatchingAllConditions();
+        }
+
+        private static string GetLogText(JObject tweetInfo) {
+            var user = tweetInfo["user"];
+            var retweetedStatus = tweetInfo["retweeted_status"];
+            var entities = tweetInfo["entities"];
+            var hashTags = entities["hashtags"];
+            var text = $"The user name is '{user["name"]}', they have {user["favourites_count"]} favorite tweets and have tweeted {user["statuses_count"]} times. They have {user["friends_count"]} friends and follow {user["followers_count"]} people!!\u03BB#";
+            if (!retweetedStatus.IsNullOrEmpty()) {
+                var retweetCount = retweetedStatus["retweet_count"];
+                var favoriteCount = retweetedStatus["favorite_count"];
+                text += $"This tweet has been retweeted {retweetCount} times, and have been favorited by {favoriteCount} people\u03BB#";
+            }
+            if (!hashTags.IsNullOrEmpty()) {
+                var hashTagsString = String.Join(", ", hashTags.Select(x => $"{x["text"]}"));
+                text += $"This tweet has the following hash tags: [{hashTagsString}]\u03BB#";
+            }
+            text += $"The tweet message is: [{tweetInfo["text"]}]\u03BB#";
+            return text;
         }
 
         private static void SetTwitterCredentials() {
