@@ -74,17 +74,17 @@ namespace LogGenerator {
             var retweetedStatus = tweetInfo["retweeted_status"];
             var entities = tweetInfo["entities"];
             var hashTags = entities["hashtags"];
-            var text = $"The user name is '{user["name"]}', they have {user["favourites_count"]} favorite tweets and have tweeted {user["statuses_count"]} times. They have {user["friends_count"]} friends and follow {user["followers_count"]} people!!\u03BB#";
+            var text = $"The user name is '{user["name"]}', they have {user["favourites_count"]} favorite tweets and have tweeted {user["statuses_count"]} times. They have {user["friends_count"]} friends and follow {user["followers_count"]} people!!\u03BB";
             if (!retweetedStatus.IsNullOrEmpty()) {
                 var retweetCount = retweetedStatus["retweet_count"];
                 var favoriteCount = retweetedStatus["favorite_count"];
-                text += $"This tweet has been retweeted {retweetCount} times, and have been favorited by {favoriteCount} people\u03BB#";
+                text += $"This tweet has been retweeted {retweetCount} times, and have been favorited by {favoriteCount} people\u03BB";
             }
             if (!hashTags.IsNullOrEmpty()) {
                 var hashTagsString = String.Join(", ", hashTags.Select(x => $"{x["text"]}"));
-                text += $"This tweet has the following hash tags: [{hashTagsString}]\u03BB#";
+                text += $"This tweet has the following hash tags: [{hashTagsString}]\u03BB";
             }
-            text += $"The tweet message is: [{tweetInfo["text"]}]\u03BB#";
+            text += $"The tweet message is: [{tweetInfo["text"]}]\u03BB";
             return text;
         }
 
