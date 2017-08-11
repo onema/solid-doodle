@@ -7,7 +7,12 @@ namespace LogGenerator {
 
         //--- Methods ---
         static void Main(string[] args) {
+            var twitterStream = new TwitterStream();
             var app = new CommandLineApplication();
+            Console.CancelKeyPress += delegate {
+                // call methods to clean up
+                twitterStream.Stop();
+            };
             var generate = app.Command("generate", config => { 
                 config.OnExecute(()=>{
                     config.ShowHelp(); //show help for generate
@@ -27,7 +32,7 @@ namespace LogGenerator {
                 config.HelpOption("-? | -h | --help");
                 var filterValue = config.Argument("filter", "value for the filter, e.g. cats, baseball, news", false);
                 config.OnExecute(()=>{ 
-                    TwitterStream.Run(-1, filterValue.Value);
+                    twitterStream.Run(-1, filterValue.Value);
                     return 0;
                 });   
             });
@@ -38,7 +43,7 @@ namespace LogGenerator {
                 var filterValue = config.Argument("filter", "value for the filter, e.g. cats, baseball, news", false);
                 config.OnExecute(()=>{
                     if (string.IsNullOrWhiteSpace(number.Value)) return 1;
-                    TwitterStream.Run(int.Parse(number.Value), filterValue.Value);
+                    twitterStream.Run(int.Parse(number.Value), filterValue.Value);
                     return 0;
                 });   
             });
