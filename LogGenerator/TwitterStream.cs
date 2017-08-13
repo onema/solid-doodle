@@ -120,9 +120,9 @@ namespace LogGenerator {
             var entities = tweetInfo["entities"];
             var hashTags = entities["hashtags"];
             var text = new List<string> {
-                $"[USER]: The user name is {user["name"]}', they have ({user["favourites_count"]}) favorite tweets and " +
+                $"[USER]: The user name is ({user["name"]}), they have ({user["favourites_count"]}) favorite tweets and " +
                     $"have tweeted ({user["statuses_count"]}) times. " +
-                    $"They have ({user["friends_count"]} )friends and follow ({user["followers_count"]}) people!!",
+                    $"They have ({user["friends_count"]}) friends and follow ({user["followers_count"]}) people!!",
                 $"[MESSAGE]: The tweet message is: ({tweetInfo["text"]})"
             };
             if(!retweetedStatus.IsNullOrEmpty()) {
@@ -137,7 +137,7 @@ namespace LogGenerator {
             if(!coordinates.IsNullOrEmpty()) {
                 var latitude = coordinates["coordinates"][0];
                 var longitude = coordinates["coordinates"][1];
-                text.Add($"[LOCATION]: The location of this tweet is (lat: {latitude}, long: {longitude})");
+                text.Add($"[LOCATION]: The location of this tweet is lat: ({latitude}), long: ({longitude})");
             }
             return string.Join("\u03BB", text);
         }

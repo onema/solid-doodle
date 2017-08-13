@@ -76,32 +76,19 @@ TODO: Modify the below example for tweets!
 
 ---
 
-```json
-PUT tweets
-{
-    "settings" : {
-        "number_of_shards" : 1
-    },
-    "mappings" : {
-        "hero" : {
-            "properties" : {
-                "name" : { "type" : "text" },
-                "urlslug" : { "type" : "text" },
-                "identity" : { "type" : "text" },
-                "alignment" : { "type" : "text" },
-                "eye_color" : { "type" : "text" },
-                "hair_color" : { "type" : "text" },
-                "sex" : { "type" : "text" },
-                "gsm" : { "type" : "text" },
-                "alive" : { "type" : "text" },
-                "appearances" : { "type" : "integer" },
-                "first_appearance" : { "type" : "text" },
-                "year" : { "type" : "integer" },
-                "location": { "type": "geo_point" }
-            }
-        }
-    }
-}
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS juant_test.users (
+  `name` string,
+  `favorite` int,
+  `tweetcount` int,
+  `friends` int,
+  `follow` int 
+)
+ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+WITH SERDEPROPERTIES (
+  'serialization.format' = '1'
+) LOCATION 's3://<stage>-lambda-sharp-s3-logs/users/'
+TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 
 ### Use lambda to transform the log data
