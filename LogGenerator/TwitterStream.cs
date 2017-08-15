@@ -83,7 +83,7 @@ namespace LogGenerator {
                     Message = GetLogText(tweetInfo),
                     Timestamp = DateTime.Now
                 });
-                if(++counter % 10 == 0) {
+                if(++counter % 50 == 0) {
                     sequenceToken = DispatchLogEvents(logEventsBatch, sequenceToken);
                     logEventsBatch = new List<InputLogEvent>();
                 }
@@ -119,11 +119,14 @@ namespace LogGenerator {
             var retweetedStatus = tweetInfo["retweeted_status"];
             var entities = tweetInfo["entities"];
             var hashTags = entities["hashtags"];
+            var tweetDate = tweetInfo["created_at"].ToString();
+            var userDate = user["created_at"].ToString();
             var text = new List<string> {
                 $"[USER]: The user name is ({user["name"]}), they have ({user["favourites_count"]}) favorite tweets and " +
                     $"have tweeted ({user["statuses_count"]}) times. " +
-                    $"They have ({user["friends_count"]}) friends and follow ({user["followers_count"]}) people!!",
-                $"[MESSAGE]: The tweet message is: ({tweetInfo["text"]})"
+                    $"They have ({user["friends_count"]}) friends and follow ({user["followers_count"]}) people!!" + 
+                    $"This user was created on ({DateTime.Parse(userDate):yyyy-MM-dd HH:mm:ss})",
+                $"[MESSAGE]: The tweet by ({user["name"]}) is: ({tweetInfo["text"]}) and it was tweeted at ({DateTime.Parse(tweetDate):yyyy-MM-dd HH:mm:ss})"
             };
             if(!retweetedStatus.IsNullOrEmpty()) {
                 var retweetCount = retweetedStatus["retweet_count"];
