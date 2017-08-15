@@ -5,3 +5,5 @@ obj
 demo
 .vs
 .vscode
+credentials.json
+

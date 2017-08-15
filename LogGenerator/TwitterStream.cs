@@ -74,10 +74,10 @@ namespace LogGenerator {
             var counter = 0;
             var logEventsBatch = new List<InputLogEvent>();
             _stream.AddTrack(filterValue);
-            // stream.AddLocation(new Coordinates(-74, 40), new Coordinates(-73, 41));
+            // _stream.AddLocation(new Coordinates(32.0, -114.42), new Coordinates(41.96, -124.21));
             _stream.MatchingTweetReceived += (sender, eventArgs) => {
+                Console.WriteLine(counter + ": " + eventArgs.Tweet);
                 var json = eventArgs.Tweet.ToJson();
-                Console.WriteLine(json);
                 var tweetInfo = JsonConvert.DeserializeObject<JObject>(json);
                 logEventsBatch.Add(new InputLogEvent {
                     Message = GetLogText(tweetInfo),
@@ -91,6 +91,14 @@ namespace LogGenerator {
                     sequenceToken = DispatchLogEvents(logEventsBatch, sequenceToken);
                     Console.WriteLine("Stoping TwitterStream");
                     Stop();
+                }
+            };
+            _stream.StreamStopped += (sender, args) => {
+                if(args.Exception != null) {
+                    Console.WriteLine($"Stream stopped with exception: {args.Exception}");
+                }
+                if(args.DisconnectMessage != null) {
+                    Console.WriteLine($"Disconnect message: {args.DisconnectMessage}");
                 }
             };
             _stream.StartStreamMatchingAllConditions();
@@ -113,14 +121,14 @@ namespace LogGenerator {
         }
 
         private static string GetLogText(JObject tweetInfo) {
-            Console.WriteLine(tweetInfo["text"]);
+            // Console.WriteLine(tweetInfo["text"]);
             var user = tweetInfo["user"];
             var coordinates = tweetInfo["coordinates"];
             var retweetedStatus = tweetInfo["retweeted_status"];
             var entities = tweetInfo["entities"];
             var hashTags = entities["hashtags"];
             var text = new List<string> {
-                $"[USER]: The user name is ({user["name"]}), they have ({user["favourites_count"]}) favorite tweets and " +
+                $"[USER]: The username is ({user["name"]}), they have ({user["favourites_count"]}) favorite tweets and " +
                     $"have tweeted ({user["statuses_count"]}) times. " +
                     $"They have ({user["friends_count"]}) friends and follow ({user["followers_count"]}) people!!",
                 $"[MESSAGE]: The tweet message is: ({tweetInfo["text"]})"
@@ -135,8 +143,8 @@ namespace LogGenerator {
                 text.Add($"[HASH_TAGS]: This tweet has the following hash tags: ({hashTagsString})");
             }
             if(!coordinates.IsNullOrEmpty()) {
-                var latitude = coordinates["coordinates"][0];
-                var longitude = coordinates["coordinates"][1];
+                var latitude = coordinates["latitide"];
+                var longitude = coordinates["longitude"];
                 text.Add($"[LOCATION]: The location of this tweet is lat: ({latitude}), long: ({longitude})");
             }
             return string.Join("\u03BB", text);
