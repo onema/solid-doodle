@@ -8,7 +8,7 @@ namespace TestLogParser {
         public void UserEntrySholdBeParsedCorrectly() {
             // Arrange 
             var user = new User(
-                "[USER]: The user name is (Foo), they have (8193) favorite tweets and have tweeted (6460) times. They have (661) friends and follow (788) people!!");
+                "[USER]: The user name is (Foo), they have (8193) favorite tweets and have tweeted (6460) times. They have (661) friends and follow (788) people!! This user was created on (2009-02-13T10:00:41-08:00)");
             
             // Act - Assert
             Assert.Equal("Foo", user.Name);
