@@ -51,7 +51,7 @@ namespace LogParser {
             var data = DecompressLogData(cloudWatchLogsEvent.AwsLogs.Data);
             Console.WriteLine($"THIS IS THE DECODED, UNCOMPRESSED DATA: {data}");
             
-            // Level 2: Frame and filter events
+            // Level 2: Frame and filter log records
             var events = JsonConvert.DeserializeObject<DecompressedEvents>(data).LogEvents;
             var framedEvents = events.Select(x => x.Message.Split('\u03BB').ToList()).ToList();
             var userJson = UserJson(framedEvents);
