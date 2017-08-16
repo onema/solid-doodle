@@ -7,5 +7,5 @@ aws iam attach-role-policy --profile lambdasharp --role-name LambdaSharpLogParse
 # Create log group and stream
 aws logs create-log-group --log-group-name '/lambda-sharp/log-parser/dev' --profile lambdasharp
 aws logs create-log-stream --log-group-name '/lambda-sharp/log-parser/dev' --log-stream-name test-log-stream --profile lambdasharp
-aws s3api create-bucket --bucket $1"-lambda-sharp-s3-logs" --create-bucket-configuration LocationConstraint=us-west-2
+aws s3api create-bucket --bucket $1"-lambda-sharp-s3-logs" --create-bucket-configuration LocationConstraint=$2 --profile lambdasharp
 
