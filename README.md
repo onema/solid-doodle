@@ -10,9 +10,23 @@ The following tools and accounts are required to complete these instructions.
 * [Install AWS CLI](https://aws.amazon.com/cli/)
 * [Sign-up for an AWS account](https://aws.amazon.com/)
 * [Sign-up for an Amazon developer account](https://developer.amazon.com/)
+* [Twitter account](https://twitter.com/)
 
 ## LEVEL 0 - Setup
 The following steps will walk you through the set-up of a CloudWatch Log and the provided lambda function that will be used to parse the log stream.
+
+### Create a Twitter account
+1. Sign into twitter and navigate to [https://apps.twitter.com/](https://apps.twitter.com/)
+2. Click on [Create New App](https://apps.twitter.com/app/new)
+3. Fill in the name, description, and a placeholder url and create the twitter application
+4. Navigate to `Keys and Access Tokens` tab and click `Create my access token`
+5. Save the 
+    1. Consumer Key
+    2. Consumer Secret
+    3. Access Token
+    4. Access Token Secret
+6. Navigate to `/LogGenerator/credentials.json` and complete the fieds
+
 
 ### Create `lambdasharp` AWS Profile
 The project uses by default the `lambdasharp` profile. Follow these steps to setup a new profile if need be.
@@ -61,8 +75,18 @@ Data will begin streaming from Twitter into the CloudWatch log and will end afte
 
 ## Level 2 - Setup Lambda trigger and save data to S3
 
-1. Set up the lambda function to trigger from the CloudWatch log group.
-2. Extend the lambda function to store the incoming log data in S3.
+### Deploy lambda function
+1. Navigate into the LogParser folder: `cd LogParser`
+2. Run: `dotnet restore`
+3. Run: `dotnet lambda deploy-function`
+
+### Set up lambda trigger
+1. From the AWS Console, navigate to the Lambda Services console
+2. Find the deployed function and click into it to find the `Triggers` tab
+3. Add a trigger and select `CloudWatch Logs` as the trigger
+4. Select the log group `/lambda-sharp/log-parser/dev` and add a filter name
+
+### Save data to S3
 
 ## Level 3 - Search log data using ElasticSearch
 Use the lambda function to transform the streamed data into an ElasticSearch-readable JSON format, and search it from S3.
