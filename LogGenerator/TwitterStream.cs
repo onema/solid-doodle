@@ -132,9 +132,9 @@ namespace LogGenerator {
             var text = new List<string> {
                 $"[USER]: The username is ({user["screen_name"]}) and their name is ({user["name"]}), they have ({user["favourites_count"]}) favorite tweets and " +
                     $"have tweeted ({user["statuses_count"]}) times. " +
-                    $"They have ({user["friends_count"]}) friends and follow ({user["followers_count"]}) people!!" + 
+                    $"They have ({user["friends_count"]}) friends and follow ({user["followers_count"]}) people!! " + 
                     $"This user was created on ({DateTime.Parse(userDate):yyyy-MM-dd HH:mm:ss})",
-                $"[MESSAGE]: The tweet by ({user["screen_name"]}) is: ({tweetInfo["text"]}) and it was tweeted at ({DateTime.Parse(tweetDate):yyyy-MM-dd HH:mm:ss})"
+                $"[MESSAGE]: The tweet by ({user["screen_name"]}) is: ({tweetInfo["text"].ToString().Replace("(", "").Replace(")", "")}) and it was tweeted at ({DateTime.Parse(tweetDate):yyyy-MM-dd HH:mm:ss})"
             };
             if(!retweetedStatus.IsNullOrEmpty()) {
                 var retweetCount = retweetedStatus["retweet_count"];
