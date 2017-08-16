@@ -75,8 +75,18 @@ Data will begin streaming from Twitter into the CloudWatch log and will end afte
 
 ## Level 2 - Setup Lambda trigger and save data to S3
 
-1. Set up the lambda function to trigger from the CloudWatch log group.
-2. Extend the lambda function to store the incoming log data in S3.
+### Deploy lambda function
+1. Navigate into the LogParser folder: `cd LogParser`
+2. Run: `dotnet restore`
+3. Run: `dotnet lambda deploy-function`
+
+### Set up lambda trigger
+1. From the AWS Console, navigate to the Lambda Services console
+2. Find the deployed function and click into it to find the `Triggers` tab
+3. Add a trigger and select `CloudWatch Logs` as the trigger
+4. Select the log group `/lambda-sharp/log-parser/dev` and add a filter name
+
+### Save data to S3
 
 ## Level 3 - Search log data using ElasticSearch
 Use the lambda function to transform the streamed data into an ElasticSearch-readable JSON format, and search it from S3.
