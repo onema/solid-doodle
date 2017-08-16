@@ -163,7 +163,7 @@ This is important because Athena will count each line as a new record.
 >*BONUS 2*: 
 > Compress the file before putting it into S3. (Bonus 1 and 2 are not mutually exclusive)
 
-### Level 4 - Set up Athena
+### Level 4 - Setup Athena
 Set up an Athena database called `lambdasharp_logs`, and create a table that defines the schema of the parsed JSON. The following is a minimal example, add additional fields for information found in the log streams.
 
 ```sql
