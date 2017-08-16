@@ -92,11 +92,11 @@ CREATE EXTERNAL TABLE IF NOT EXISTS lambdasharp_logs.users (
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-) LOCATION 's3://<stage>-lambda-sharp-s3-logs/users/'
+) LOCATION 's3://<USERNAME>-lambda-sharp-s3-logs/users/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 
-```
+```sql
 CREATE EXTERNAL TABLE IF NOT EXISTS lambdasharp_logs.tweet_info (
   `user_name` string,
   `retweeted` int,
@@ -110,7 +110,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS lambdasharp_logs.tweet_info (
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-) LOCATION 's3://<stage>-lambda-sharp-s3-logs/tweet-info/'
+) LOCATION 's3://<USERNAME>-lambda-sharp-s3-logs/tweet-info/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 
