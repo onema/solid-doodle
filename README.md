@@ -95,10 +95,10 @@ The included LogGenerator application can stream live tweets directly into the C
 #### Team 2
 ```json 
 {
-    "consumer_key" : "",
-    "consumer_secret" : "",
-    "access_token" : "",
-    "access_secret" : ""
+    "consumer_key" : "kOr9jFO0N0oFWEilI74ZTmaop",
+    "consumer_secret" : "eI1Tjv0tgO9nkYxAJfMslVJRRwJqKsosFwEjEbewYOZDRZhGll",
+    "access_token" : "820470222-yHssA3Qt7qNDX5A47VrR0UQJXuWARlcTL6Gok9Ut",
+    "access_secret" : "DK1d9WzGKBEAqH0HzFTChDdgsxUpjMhcUzDA2nmy6j0xX"
 }
 ```
 
