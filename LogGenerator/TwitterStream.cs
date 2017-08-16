@@ -89,7 +89,6 @@ namespace LogGenerator {
                 }
                 if(--sampleSize == 0) {
                     sequenceToken = DispatchLogEvents(logEventsBatch, sequenceToken);
-                    Console.WriteLine("Stoping TwitterStream");
                     Stop();
                 }
             };
@@ -117,6 +116,7 @@ namespace LogGenerator {
         }    
         
         public void Stop() {
+            Console.WriteLine("Stopping Stream...");
             _stream.StopStream();
         }
 
