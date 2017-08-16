@@ -10,9 +10,23 @@ The following tools and accounts are required to complete these instructions.
 * [Install AWS CLI](https://aws.amazon.com/cli/)
 * [Sign-up for an AWS account](https://aws.amazon.com/)
 * [Sign-up for an Amazon developer account](https://developer.amazon.com/)
+* [Twitter account](https://twitter.com/)
 
 ## LEVEL 0 - Setup
 The following steps will walk you through the set-up of a CloudWatch Log and the provided lambda function that will be used to parse the log stream.
+
+### Create a Twitter account
+1. Sign into twitter and navigate to [https://apps.twitter.com/](https://apps.twitter.com/)
+2. Click on [Create New App](https://apps.twitter.com/app/new)
+3. Fill in the name, description, and a placeholder url and create the twitter application
+4. Navigate to `Keys and Access Tokens` tab and click `Create my access token`
+5. Save the 
+    1. Consumer Key
+    2. Consumer Secret
+    3. Access Token
+    4. Access Token Secret
+6. Navigate to `/LogGenerator/credentials.json` and complete the fieds
+
 
 ### Create `lambdasharp` AWS Profile
 The project uses by default the `lambdasharp` profile. Follow these steps to setup a new profile if need be.
