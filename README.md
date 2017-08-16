@@ -12,11 +12,10 @@ We are providing you with a log generator that uses the Twitter Streaming API to
 ### Pre-requisites
 The following tools and accounts are required to complete these instructions.
 
-* [Install .NET Core 1.x](https://www.microsoft.com/net/core)
+* [Install .NET Core](https://www.microsoft.com/net/core)
 * [Install AWS CLI](https://aws.amazon.com/cli/)
 * [Sign-up for an AWS account](https://aws.amazon.com/)
-* [Sign-up for an Amazon developer account](https://developer.amazon.com/)
-* [Twitter account](https://twitter.com/)
+* [Create a Twitter account](https://twitter.com/)
 
 ## LEVEL 0 - Setup
 The following steps walk you through the set-up of a CloudWatch Log and the provided lambda function that will be used to parse the log stream.
