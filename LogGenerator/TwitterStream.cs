@@ -7,6 +7,7 @@ using Amazon.CloudWatchLogs;
 using Amazon.CloudWatchLogs.Model;
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
+using LogGenerator.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tweetinvi;
@@ -31,20 +32,19 @@ namespace LogGenerator {
         
         //--- Constants ---
         const string AWS_REGION = "us-west-2";
-        const string LOG_GROUP = "/lambda-sharp/log-parser/dev";
-        const string LOG_STREAM = "test-log-stream";
         
         //--- Fields ---
         private readonly IAmazonCloudWatchLogs _client;
         private readonly IFilteredStream _stream;
+        private readonly ApplicationVars _applicationVars;
         
         //--- Properties ---
         string SequenceToken {
             get {
                 var response = _client.DescribeLogStreamsAsync(new DescribeLogStreamsRequest {
-                    LogGroupName = LOG_GROUP
+                    LogGroupName = _applicationVars.LogGroup
                 }).Result;
-                return response.LogStreams.First(x => x.LogStreamName == LOG_STREAM).UploadSequenceToken;
+                return response.LogStreams.First(x => x.LogStreamName == _applicationVars.LogStream).UploadSequenceToken;
             }
         }
 
@@ -59,6 +59,9 @@ namespace LogGenerator {
             _client = new AmazonCloudWatchLogsClient(awsCredentials, region);
             SetTwitterCredentials();
             _stream = Stream.CreateFilteredStream();
+            
+            // Read application vars
+            _applicationVars = JsonConvert.DeserializeObject<ApplicationVars>(File.ReadAllText("application_vars.json"));    
         }
         
         //--- Methods ---
@@ -106,8 +109,8 @@ namespace LogGenerator {
         public string DispatchLogEvents(List<InputLogEvent> logEvents, string sequenceToken) {
             Console.WriteLine("Dispatching Log Events.");
             var request = new PutLogEventsRequest {
-                  LogGroupName = LOG_GROUP,
-                  LogStreamName = LOG_STREAM,
+                  LogGroupName = _applicationVars.LogGroup,
+                  LogStreamName = _applicationVars.LogStream,
                   LogEvents = logEvents,
                   SequenceToken = sequenceToken
             };
