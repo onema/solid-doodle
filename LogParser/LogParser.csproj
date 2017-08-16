@@ -11,4 +11,9 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="1.7.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\README.md">
+      <Link>README.md</Link>
+    </Content>
+  </ItemGroup>
 </Project>

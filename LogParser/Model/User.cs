@@ -11,6 +11,9 @@ namespace LogParser.Model {
         private static readonly Regex Filter = new Regex(FILTER, RegexOptions.Compiled); 
         
         //--- Properties ---
+        [JsonProperty(PropertyName="user_name")]
+        public string UserName { get; set; }
+        
         [JsonProperty(PropertyName="name")]
         public string Name { get; set; }
         
@@ -32,12 +35,13 @@ namespace LogParser.Model {
         //--- Constructors ---
         public User(string user) {
             var matches = Filter.Matches(user);
-            Name = matches[0].Groups[1].Value;
-            Favorite = Convert.ToInt32(matches[1].Groups[1].Value);
-            TweetCount = Convert.ToInt32(matches[2].Groups[1].Value);
-            Friends = Convert.ToInt32(matches[3].Groups[1].Value);
-            Follow = Convert.ToInt32(matches[4].Groups[1].Value);
-            DateCreated = matches[5].Groups[1].Value;
+            UserName = matches[0].Groups[1].Value;
+            Name = matches[1].Groups[1].Value;
+            Favorite = Convert.ToInt32(matches[2].Groups[1].Value);
+            TweetCount = Convert.ToInt32(matches[3].Groups[1].Value);
+            Friends = Convert.ToInt32(matches[4].Groups[1].Value);
+            Follow = Convert.ToInt32(matches[5].Groups[1].Value);
+            DateCreated = matches[6].Groups[1].Value;
         }
     }
 }

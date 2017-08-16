@@ -82,6 +82,7 @@ CREATE DATABASE lambdasharp_logs;
 
 ```sql
 CREATE EXTERNAL TABLE IF NOT EXISTS lambdasharp_logs.users (
+  `user_name` string,
   `name` string,
   `favorite` int,
   `tweet_count` int,
