@@ -75,19 +75,42 @@ Set up an ElasticSearch index called `tweets`, and define its schema. The follow
 TODO: Modify the below example for tweets!
 
 ---
+```sql
+CREATE DATABASE lambdasharp_logs;
+```
+
 
 ```sql
-CREATE EXTERNAL TABLE IF NOT EXISTS juant_test.users (
+CREATE EXTERNAL TABLE IF NOT EXISTS lambdasharp_logs.users (
   `name` string,
   `favorite` int,
-  `tweetcount` int,
+  `tweet_count` int,
   `friends` int,
-  `follow` int 
+  `follow` int,
+  `date_created` timestamp
 )
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
 ) LOCATION 's3://<stage>-lambda-sharp-s3-logs/users/'
+TBLPROPERTIES ('has_encrypted_data'='false');
+```
+
+```
+CREATE EXTERNAL TABLE IF NOT EXISTS lambdasharp_logs.tweet_info (
+  `user_name` string,
+  `retweeted` int,
+  `favorited` int,
+  `message` string,
+  `hashtags` array<string>,
+  `latitude` double,
+  `longitude` double,
+  `date_created` timestamp
+)
+ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+WITH SERDEPROPERTIES (
+  'serialization.format' = '1'
+) LOCATION 's3://<stage>-lambda-sharp-s3-logs/tweet-info/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 
