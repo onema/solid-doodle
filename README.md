@@ -1,3 +1,4 @@
+
 # λ# Query and Visualize CloudWatch Logs w/ Lambda and Athena - August 2017 Team Hackathon Challenge
 
 Collecting, parsing and analyzing machine data is very common these days. 
