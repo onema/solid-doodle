@@ -1,4 +1,4 @@
-# λ# Query and Visualize CloudWatch Logs w/ Lambda and Athena - August 2017 Team Hackathon Challenge
+# Query and Visualize CloudWatch Logs w/ Lambda and Athena - August 2017 Team Hackathon Challenge
 
 Collecting, parsing and analyzing machine data is very common these days. 
 Applications like Sumologic, Splunk or Loggly help tens of thousands of organizations make sense of data (often in unpredictable formats), 
@@ -218,3 +218,4 @@ Happy Hacking!
 ## Copyright & License
 * Copyright (c) 2017 Juan Manuel Torres, Katherine Marino, Daniel Lee
 * MIT License
+
